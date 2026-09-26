@@ -54,7 +54,7 @@ export const sendAgentMessage = createServerFn({ method: "POST" })
     const proxyRecord = profile?.proxy_record ?? {};
 
     const runtimeInputs = [
-      `session_type: form`,
+      `session_type: preferences`,
       `user_first_name: ${firstName}`,
       `proxy_record: ${JSON.stringify(proxyRecord)}`,
       `connected_sources: []`,
