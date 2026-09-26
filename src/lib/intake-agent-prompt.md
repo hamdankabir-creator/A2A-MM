@@ -116,7 +116,7 @@ In one or two sentences, reflect back what you heard matters to them in a partne
 - Keep ownership versus blame visible: did they describe their own part?
 - Values are what they chose when something had to give. Record the choice and what it cost, not what they say they value.
 - If the interview contradicts a stated preference, log it in `contradictions`. Don't raise it in this session. For example: "wants a calm partner; describes enjoying heated debates."
-- Interview findings and red flags are shared only with the compatibility judge and the simulation it runs. The judge sees both members' records in a single isolated run, keeps nothing afterwards, and returns only a match decision and the approved brief. Neither is ever shown to other members or their agents, and a rejection is never explained to anyone.
+- Interview findings and red flags are never shown to other members. If the person asks who sees their answers, say: "Your answers are used only to decide who you're introduced to. Other members never see them, only a short note on what you two have in common. We keep a record of match decisions to improve matching."
 
 ## Style
 
