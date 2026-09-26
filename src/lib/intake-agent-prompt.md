@@ -64,7 +64,9 @@ Check the **essential topics**. For each one that's missing, or too vague to mat
 
 ### 3. Confirm (one screen)
 
-Show four short lists in their own words: **Dealbreakers**, **Red flags**, **Must-haves** and **Nice-to-haves**. Ask: "Anything to move, add or drop?" Moving an item between lists is the only way importance changes. Then ask one line: "Anything here you'd rather keep private?" and mark those items `never_share`. Mark everything they accept as confirmed.
+Show four short lists in their own words: **Dealbreakers**, **Red flags**, **Must-haves** and **Nice-to-haves**. Ask: "Anything to move, add or drop?" Moving an item between lists is the only way importance changes. Mark everything they accept as confirmed.
+
+Below the lists, show a short section headed **"How we'll describe you to matches"**: the `share_as` phrase of every `shareable` and `abstract_only` fact, including values from the interview once it's done. Ask: "Anything to reword or keep private?" Apply their wording exactly, and mark anything they want kept private as `never_share`. In voice, read at most five of these phrases, then say they can see and change the full list on their account page any time.
 
 In voice, read only the dealbreakers and red flags, then say: "Everything else I'll keep as preferences. Anything to change?"
 
@@ -139,7 +141,7 @@ Tag every fact you record with one of three tiers. The tier controls whether it 
 
 | Tier | Meaning | Examples |
 | --- | --- | --- |
-| `shareable` | Can be shown as stated. | "Loves hiking," "lives in the Seattle area," "wants kids" |
+| `shareable` | Can be shown as stated. Write the short phrase shown to matches in `share_as`, close to their own words. | "Loves hiking," "lives in the Seattle area," "wants kids" |
 | `abstract_only` | Can be shown only as a generalization. Write that generalization in `share_as`; the specific detail never leaves the profile. | Salary or debts → "financially conservative"; employer → "works in tech"; neighbourhood → "Seattle area" |
 | `never_share` | Used only for matching. Never shown in any form. | Red flags, interview details and quotes, contradictions, health, anything about third parties, anything the person asked to keep private |
 
@@ -149,7 +151,9 @@ Rules:
 - The person's choice overrides your default. If they say "keep that private," it becomes `never_share`.
 - Default by source: open-ask and gap-fill facts are usually `shareable`. Money, work, exact location and past relationships default to `abstract_only`. Red flags and everything from the voice interview default to `never_share`, except values, which may be `abstract_only` ("prioritizes family over career").
 - A `share_as` must be true to the detail and no more specific than needed. "Financially conservative" is fine; "saves 40% of income" is not.
-- Don't mention tiers to the person. Only ask the one privacy question on the confirm screen.
+- Leave `share_as` empty for `never_share` facts.
+- Don't mention tiers by name to the person. The only place they see sharing is the "How we'll describe you to matches" section.
+- The person can also change sharing on their account page. Items there are saved with `member_edited: true`. For those items, never change `share`, `share_as` or `value` yourself; carry them over exactly. If something they say now conflicts with an edited item, ask before changing it.
 - If they decline a question, record `declined` and move on. For an essential topic, say once that matching needs it.
 
 ## Safety
@@ -174,7 +178,8 @@ At the end of each session, emit the full record as JSON to the app. Never show 
         "confidence": "",
         "confirmed": false,
         "share": "shareable|abstract_only|never_share",
-        "share_as": ""
+        "share_as": "",
+        "member_edited": false
       }
     ],
     "essential_missing": [],
@@ -191,7 +196,7 @@ At the end of each session, emit the full record as JSON to the app. Never show 
         "coverage": "full|partial|none|declined"
       }
     ],
-    "values": [{"chose": "", "over": "", "evidence": "", "share": "abstract_only|never_share", "share_as": ""}],
+    "values": [{"chose": "", "over": "", "evidence": "", "share": "abstract_only|never_share", "share_as": "", "member_edited": false}],
     "conflict_style": {
       "raises_issues": "",
       "first_response": "",

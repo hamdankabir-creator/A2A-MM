@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AppHeader } from "@/components/AppHeader";
+import { SharingSection } from "@/components/SharingSection";
 import { fetchMyProfile } from "@/lib/profile";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -82,6 +83,8 @@ function Dashboard() {
                 </Link>
               </div>
             </div>
+
+            <SharingSection userId={user.id} proxyRecord={p?.proxy_record} />
 
             {p?.completed && (
               <dl className="mt-10 grid gap-6 sm:grid-cols-2">
