@@ -87,25 +87,43 @@ function readRows(record: Json | null | undefined): Row[] {
   return [...itemRows, ...valueRows];
 }
 
+// The source item's path as the intake agent writes it in a fact's `source_ref`,
+// e.g. "preferences.items[3]" or "interview.values[0]".
+function sourceRef(r: Row): string {
+  return `${r.section}.${r.list}[${r.index}]`;
+}
+
 function applyRows(record: Json | null | undefined, rows: Row[], original: Row[]): Json {
   const root = structuredClone(asObject(record ?? undefined));
+  const facts = Array.isArray(root["facts"]) ? (root["facts"] as Json[]) : null;
   const changed = rows.filter((r, i) => {
     const o = original[i];
     return o && (o.share !== r.share || o.shareAs !== r.shareAs);
   });
   for (const r of changed) {
+    const share = r.share;
+    const shareAs = share === "never_share" ? "" : r.shareAs.trim();
+
     const section = asObject(root[r.section]);
     const list = Array.isArray(section[r.list]) ? (section[r.list] as Json[]) : [];
     const entry = asObject(list[r.index]);
-    list[r.index] = {
-      ...entry,
-      share: r.share,
-      share_as: r.share === "never_share" ? "" : r.shareAs.trim(),
-      member_edited: true,
-    };
+    list[r.index] = { ...entry, share, share_as: shareAs, member_edited: true };
     section[r.list] = list;
     root[r.section] = section;
+
+    // Keep the judge's fact list in step: the primary fact for this source
+    // carries the member's sharing choice.
+    if (facts) {
+      const ref = sourceRef(r);
+      for (let i = 0; i < facts.length; i++) {
+        const fact = asObject(facts[i]);
+        if (fact["source_ref"] === ref && fact["primary"] === true) {
+          facts[i] = { ...fact, share, share_as: shareAs };
+        }
+      }
+    }
   }
+  if (facts) root["facts"] = facts;
   return root;
 }
 

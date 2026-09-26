@@ -15,4 +15,5 @@
 
 - Member answers live in one `profiles` row per user (id = auth user id), owner-only RLS; the future matchmaking agent reads from this table server-side.
 - Signed-in pages live under `src/routes/_authenticated/`; profile reads/writes use the browser client with RLS.
+- `src/lib/compatibility-judge-prompt.md` is the compatibility judge's prompt. It reads only `proxy_record.facts`, so keep its fact fields and sharing tiers in step with the intake prompt's "Fact list for matching" section. Account-page sharing edits are copied onto the source's `primary` fact in `SharingSection.tsx`.
 - `src/lib/intake-agent-prompt.md` is the single source of truth for the matchmaker's behaviour — the user edits it in the connected GitHub repo with Claude Code, so never rewrite it from the Google Doc or hardcode prompt text elsewhere.

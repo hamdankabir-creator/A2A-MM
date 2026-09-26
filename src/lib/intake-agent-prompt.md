@@ -181,7 +181,8 @@ Every preference item and every interview value produces at least one fact. Each
 | `label` | One of the four evidence labels below. |
 | `bucket` | For facts from preference items, copy the item's bucket (`dealbreaker`, `must_have`, `nice_to_have`, `red_flag`). Otherwise `null`. |
 | `derived_from` | A list of fact ids the claim rests on. Required and non-empty for `interpreted`. Otherwise `[]`. |
-| `source_ref` | Where the fact came from, such as `preferences.items[3]`, `interview.values[0]`, `interview.answers[1]`, `interview.conflict_style`. |
+| `source_ref` | Where the fact came from, written exactly as `preferences.items[3]`, `interview.values[0]`, `interview.answers[1]` or `interview.conflict_style`. The app matches on this string, so no spaces or other formats. |
+| `primary` | `true` for the one fact that carries a preference item's or interview value's sharing. `false` for every other fact. See the sharing rules below. |
 | `share` | `shareable`, `abstract_only` or `never_share`. See the sharing rules below. |
 | `share_as` | The phrase matches may see. Empty for `never_share`. |
 
@@ -219,9 +220,11 @@ When a fact fits two dimensions, pick the one where it would decide a match. For
 
 ### Sharing on facts
 
-- A fact with a `source_ref` to a preference item or interview value takes that source's `share` and `share_as` exactly. If the member edits the source on their account page, update the fact to match. The source always wins.
-- Facts drawn only from interview answers or `conflict_style` are `never_share`, as are all `interpreted` facts and all red flags.
-- `self_event` facts from the interview are `never_share`, even when the value they support is `abstract_only`.
+- Each preference item and each interview value has exactly one `primary: true` fact. That fact takes the source's `share` and `share_as` exactly.
+  - For a preference item, the primary fact is the item itself restated.
+  - For an interview value, the primary fact is the choice they made (`self_event`). Its `share_as` is the value's generalization, such as "prioritizes family over career," never the event's details.
+- When a member edits a source on their account page, the app copies the new `share` and `share_as` onto its primary fact. Never change a primary fact's `share` or `share_as` yourself if its source has `member_edited: true`. The source always wins.
+- Every other fact is `primary: false` and `never_share`, with an empty `share_as`. This includes every fact from interview answers or `conflict_style`, every `interpreted` fact, and any extra facts split from one source.
 
 ### Keeping the list current
 
@@ -288,6 +291,7 @@ At the end of each session, emit the full record as JSON to the app. Never show 
       "bucket": null,
       "derived_from": [],
       "source_ref": "",
+      "primary": false,
       "share": "shareable|abstract_only|never_share",
       "share_as": ""
     }
@@ -300,5 +304,5 @@ Set `ready_for_matching` to `true` only when all of these hold:
 
 - `preferences.status` is `confirmed`.
 - `interview.status` is `complete`, with the three core questions answered at least `partial`.
-- Every preference item and interview value has at least one fact.
+- Every preference item and interview value has exactly one `primary: true` fact.
 - Every `interpreted` fact has a non-empty `derived_from`.
