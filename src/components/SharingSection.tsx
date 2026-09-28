@@ -8,7 +8,7 @@ type ShareTier = "shareable" | "abstract_only" | "never_share";
 type Row = {
   key: string;
   section: "preferences" | "interview";
-  list: "items" | "values";
+  list: "items" | "values" | "conversation_hooks";
   index: number;
   label: string;
   privateHint: string;
@@ -35,6 +35,9 @@ function tier(v: Json | undefined): ShareTier {
 }
 
 const TOPIC_LABELS: Record<string, string> = {
+  gender: "Gender",
+  seeking: "Looking for",
+  age: "Age",
   relationship_goal: "Relationship goal",
   children: "Children",
   partner_existing_children: "Partner's children",
@@ -57,6 +60,7 @@ function readRows(record: Json | null | undefined): Row[] {
   const root = asObject(record ?? undefined);
   const items = asArray(asObject(root["preferences"])["items"]);
   const values = asArray(asObject(root["interview"])["values"]);
+  const hooks = asArray(asObject(root["interview"])["conversation_hooks"]);
 
   const itemRows = items.map((it, index): Row => {
     const topic = str(it["topic"]);
@@ -84,7 +88,18 @@ function readRows(record: Json | null | undefined): Row[] {
     shareAs: str(v["share_as"]),
   }));
 
-  return [...itemRows, ...valueRows];
+  const hookRows = hooks.map((h, index): Row => ({
+    key: `h-${index}`,
+    section: "interview",
+    list: "conversation_hooks",
+    index,
+    label: "Talk to me about",
+    privateHint: str(h["evidence"]) || str(h["share_as"]),
+    share: tier(h["share"]),
+    shareAs: str(h["share_as"]),
+  }));
+
+  return [...itemRows, ...valueRows, ...hookRows];
 }
 
 function applyRows(record: Json | null | undefined, rows: Row[], original: Row[]): Json {

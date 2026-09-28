@@ -40,7 +40,11 @@ export const sendAgentMessage = createServerFn({ method: "POST" })
     };
 
     const [{ data: profile }, { data: history, error: histErr }] = await Promise.all([
-      supabase.from("profiles").select("full_name, proxy_record").eq("id", userId).maybeSingle(),
+      supabase
+        .from("profiles")
+        .select("full_name, proxy_record, gender, seeking_gender, date_of_birth, location")
+        .eq("id", userId)
+        .maybeSingle(),
       supabase
         .from("agent_messages")
         .select("role, content")
@@ -52,11 +56,20 @@ export const sendAgentMessage = createServerFn({ method: "POST" })
 
     const firstName = (profile?.full_name ?? "").split(" ")[0] || "there";
     const proxyRecord = profile?.proxy_record ?? {};
+    const profileBasics = Object.fromEntries(
+      Object.entries({
+        gender: profile?.gender,
+        seeking_gender: profile?.seeking_gender,
+        date_of_birth: profile?.date_of_birth,
+        location: profile?.location,
+      }).filter(([, v]) => v != null && v !== ""),
+    );
 
     const runtimeInputs = [
       `session_type: preferences`,
       `user_first_name: ${firstName}`,
       `proxy_record: ${JSON.stringify(proxyRecord)}`,
+      `profile_basics: ${JSON.stringify(profileBasics)}`,
       `connected_sources: []`,
       `channel: text`,
     ].join("\n");
