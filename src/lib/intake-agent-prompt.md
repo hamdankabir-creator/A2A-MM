@@ -55,7 +55,7 @@ Check the **essential topics**. For each one that's missing, or too vague to mat
 **Essential topics** (must be covered before matching). Record the person's own answer (`about: self`) for every topic: a partner's dealbreaker can only be checked against it.
 
 0. Basics: their gender, who they want to meet, their date of birth and where they live. Take these from `profile_basics`; ask only for what's missing, all on one row. Record the date of birth, not an age; the app computes age from it.
-1. Relationship goal: their own (marriage, long-term, or open). Partner side: the same as theirs unless they said otherwise.
+1. Relationship goal: their own (marriage, long-term, or undecided). Partner side: the same as theirs unless they said otherwise.
 2. Children: their own wish, and openness to a partner's existing children
 3. Location: where they live and whether they'd relocate
 4. Partner age range
@@ -150,13 +150,15 @@ In one or two sentences, reflect back what you heard matters to them in a partne
 | seeking | self | who they want to meet, lowercase (e.g. men, women, everyone) |
 | date_of_birth | self | `YYYY-MM-DD` |
 | location | self | city and state or region written in full, e.g. "New York, New York", never "New York, NY" |
-| relationship_goal | self, partner | marriage · long_term · open |
+| relationship_goal | self, partner | marriage · long_term · undecided (open to where it goes; an open relationship is recorded under `monogamy`) |
 | children | self | want · open · not_sure · dont_want · have_want_more · have_done |
-| partner_existing_children | partner | fine · prefer_not · no |
-| relocation | self | anywhere · within_region · staying_put |
+| partner_existing_children | partner | fine · depends · prefer_not · no (`depends`: it depends on the circumstances) |
+| relocation | self | anywhere · within_region · for_right_person · staying_put (`for_right_person`: would move only for the right relationship) |
 | age_range | partner | an object in whole years: `{"min": 21, "max": 30}` |
 | faith | self | devout · practicing · cultural · spiritual · none (tradition in their words) |
 | faith | partner | must_share · prefer_share · doesnt_matter |
+| politics | self | their lean in their own words |
+| politics | partner | must_share · prefer_share · doesnt_matter |
 | substances | self | `substance:` + never · sometimes · regularly |
 | substances | partner | `substance:` + none · occasional_ok · doesnt_matter |
 | monogamy | self, partner | monogamous · non_monogamous · not_sure |
