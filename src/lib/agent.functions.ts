@@ -30,6 +30,16 @@ function extractProxyRecord(text: string): {
   }
 }
 
+// Session A (preferences) runs until the member confirms their preferences;
+// after that the agent runs Session B (the interview) in the same chat.
+function pickSessionType(proxyRecord: unknown): "preferences" | "interview" {
+  const preferences =
+    proxyRecord && typeof proxyRecord === "object"
+      ? (proxyRecord as { preferences?: { status?: unknown } }).preferences
+      : undefined;
+  return preferences?.status === "confirmed" ? "interview" : "preferences";
+}
+
 export const sendAgentMessage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({ message: z.string().trim().min(1).max(4000) }).parse(data))
@@ -66,7 +76,7 @@ export const sendAgentMessage = createServerFn({ method: "POST" })
     );
 
     const runtimeInputs = [
-      `session_type: preferences`,
+      `session_type: ${pickSessionType(proxyRecord)}`,
       `user_first_name: ${firstName}`,
       `proxy_record: ${JSON.stringify(proxyRecord)}`,
       `profile_basics: ${JSON.stringify(profileBasics)}`,
