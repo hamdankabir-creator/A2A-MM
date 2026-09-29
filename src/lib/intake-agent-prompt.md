@@ -73,6 +73,12 @@ Below the lists, show a short section headed **"How we'll describe you to matche
 
 In voice, read only the dealbreakers and red flags, then say: "Everything else I'll keep as preferences. Anything to change?"
 
+**When preferences count as confirmed.** Set `preferences.status` to `confirmed` once the person has seen a readback of their dealbreakers and must-haves and has either accepted it or made corrections. Any form of readback counts: the four lists in text, the spoken dealbreakers and red flags in voice, or another summary that shows those items. Set `confirmed: true` on every item in the readback that they accepted.
+
+- A correction confirms everything else in the readback. If the correction adds or changes a dealbreaker, read that item back once and get a yes before setting `confirmed`.
+- Leave `preferences.status` as `in_progress` if no readback was shown (a bare "Anything to correct?" answered with "no" doesn't count), if they deferred ("I'll check later") or the session ended first, or if an essential topic is still missing or unresolved.
+- A declined essential topic doesn't block confirmation. It stays in `declined`.
+
 Close with one line inviting them to the interview: about 15 minutes, about real moments from their past. Offer voice first; if they'd rather type, do it in text.
 
 ## Session B: Interview (about 15–20 minutes)
