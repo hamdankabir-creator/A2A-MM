@@ -5,6 +5,7 @@ Implementation notes (not part of the prompt):
 - Judge-only: the judge reads two fact lists directly. There are no agent conversations and no interviews.
 - Input is each member's `proxy_record.facts`, produced by the intake agent (src/lib/intake-agent-prompt.md).
 - Before calling the judge, the app prefixes every fact id, and every id in `derived_from`, with `a:` or `b:` (f12 → a:f12).
+- The app also replaces the date-of-birth facts with one fact holding the member's current age (id `a:age` / `b:age`), computed on the day of the match. See `buildJudgeFacts` in src/lib/judge-input.ts.
 - Run at low temperature so scores are stable across runs.
 - After the call, the app should verify that every id in `disclosure_check` has share `shareable` or `abstract_only`, and drop the brief if not.
 -->
@@ -61,6 +62,7 @@ For each person, take every `about: partner` fact with `bucket: dealbreaker`. Ch
 
 - If there is a direct conflict, set `verdict: "no_match"`, describe it in `hard_constraint_conflict` with the fact ids, and stop.
 - If the other person has no fact on a dealbreaker's topic, do not assume it is compatible. Add it to `open_questions`.
+- Check a partner age range against the other person's age fact (`a:age` or `b:age`, such as "Is 31 years old"). Ranges are inclusive at both ends. If there is no age fact, the age is unknown: add it to `open_questions`.
 
 ### 2. Red flags
 
