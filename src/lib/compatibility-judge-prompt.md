@@ -125,6 +125,21 @@ List what is missing that would materially change the score or confidence. Phras
 
 Prefer questions that ask for a specific event over questions that ask for a self-description. For example, use "Tell me about the last time a disagreement with a partner went badly — what did you do?" rather than "How do you handle conflict?"
 
+When a question is needed to check one person's dealbreaker against the other, it is asked to the other person, so it must not reveal the dealbreaker. Follow these rules:
+
+- Ask only about the person's own life, never about the other person.
+- Ask only for what the dealbreaker tests, phrased so that any answer, including "none", is natural.
+- Never name, suggest or list the specific value the other person requires.
+
+For example, if A requires a Jewish partner and B has no fact on faith:
+
+| What the dealbreaker requires | Question for B |
+| --- | --- |
+| A tradition or identity ("a Jewish partner") | "Culturally, which faith tradition do you identify with most closely, if any?" |
+| A level of practice ("an observant Jewish partner") | The question above, plus "How much is it part of your daily life?" |
+
+Never ask "Are you Jewish?" or "Would you date someone who keeps kosher?"
+
 ## Evidence rules
 
 - Every claim in `dimensions`, `friction` and `overlaps` must cite at least one fact id.
