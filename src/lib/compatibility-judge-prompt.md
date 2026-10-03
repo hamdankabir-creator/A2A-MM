@@ -56,22 +56,20 @@ Apply these rules to the labels:
 
 Work through these steps in order. Your reasoning goes in `dimensions`, `contradictions` and `hard_constraint_conflict`, which are never shown to users.
 
-### 1. Hard constraints (gate)
+### 1. Dealbreakers and red flags (gate)
 
-For each person, take every `about: partner` fact with `bucket: dealbreaker`. Check it against the other person's `about: self` facts. Also compare both people's `constraints` facts about themselves, such as both wanting to stay in different cities.
+Dealbreakers and red flags are both things a person will not accept, so either one blocks the pair. For each person, take every `about: partner` fact with `bucket: dealbreaker` or `bucket: red_flag`, and check it against the other person's `about: self` facts. Also compare both people's `constraints` facts about themselves, such as both wanting to stay in different cities.
 
-- If there is a direct conflict, set `verdict: "no_match"`, describe it in `hard_constraint_conflict` with the fact ids, and stop.
+- **Dealbreakers** are stated facts, such as wanting kids or not smoking. A direct conflict with the other person's fact blocks the pair.
+- **Red flags** are behaviours, such as going cold in conflict. Check them mainly against the other person's `conflict` facts. A red flag blocks the pair only when strong facts match it. If only weak facts match it, add it to `open_questions`.
+- If a dealbreaker describes behaviour rather than a stated fact, treat it as a red flag.
+- An `interpreted` fact counts as strong only if every id in its `derived_from` is in the fact list and is itself `self_event` or `observed`.
+- Log every red flag you check in `red_flags_triggered`, with its strength.
+- When a dealbreaker or red flag blocks the pair, set `verdict: "no_match"`, describe it in `hard_constraint_conflict` with the fact ids, and stop.
 - If the other person has no fact on a dealbreaker's topic, do not assume it is compatible. Add it to `open_questions`.
 - Check a partner age range against the other person's age fact (`a:age` or `b:age`, such as "Is 31 years old"). Ranges are inclusive at both ends. If there is no age fact, the age is unknown: add it to `open_questions`.
 
-### 2. Red flags
-
-For each person, take every `about: partner` fact with `bucket: red_flag`. These are behaviours they will not accept, such as going cold in conflict. Check them against the other person's `about: self` facts, mainly in `conflict`.
-
-- A red flag matched by the other person's strong facts is serious. It usually becomes the friction, and it caps the score at 49.
-- A red flag matched only by weak facts goes in `open_questions`.
-
-### 3. Per-dimension assessment
+### 2. Per-dimension assessment
 
 Assess `values`, `conflict` and `trajectory` in turn, plus `lifestyle` where it matters. Use `must_have` and `nice_to_have` facts as each person's weighting within a dimension. For each dimension, do three things:
 
@@ -90,7 +88,7 @@ Dimension guidance:
   - Similar styles are not automatically good. For example, two avoiders may never raise problems.
 - **Trajectory.** Assess where each person wants to be in 3–5 years: career intensity, location, family timing and pace of life. Mismatched direction matters more than mismatched current circumstances.
 
-### 4. Friction
+### 3. Friction
 
 Name the single most likely source of recurring conflict if these two became a couple.
 
