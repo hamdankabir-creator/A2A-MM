@@ -1,1 +1,11 @@
 project_id = "atzqqhzbvtemwccqqjbz"
+
+# Authentication is verified explicitly in each handler. Provider requests do not carry Supabase JWTs.
+[functions.customer-intake]
+verify_jwt = false
+[functions.cartesia-webhook]
+verify_jwt = false
+[functions.cartesia-intake-tool]
+verify_jwt = false
+[functions.customer-interview-worker]
+verify_jwt = false

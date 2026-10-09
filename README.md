@@ -12,6 +12,10 @@ Open your project in the [Lovable editor](https://lovable.dev) and keep building
 
 ## Development
 
+The Heimdall customer intake implementation and provider setup are documented in
+[Customer intake deployment](docs/customer-intake-deployment.md). Start there to configure
+Supabase, the dedicated Cartesia agent, and the processing schedule before enabling calls.
+
 Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```sh

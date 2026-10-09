@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import type { Database } from "@/integrations/supabase/types";
+import type { Database, Json } from "@/integrations/supabase/types";
 import systemPrompt from "./intake-agent-prompt.md?raw";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
@@ -15,7 +15,7 @@ const RECORD_END = "```";
 
 function extractProxyRecord(text: string): {
   reply: string;
-  record: Record<string, unknown> | null;
+  record: Record<string, Json> | null;
 } {
   const start = text.lastIndexOf(RECORD_START);
   if (start === -1) return { reply: text.trim(), record: null };
@@ -24,7 +24,7 @@ function extractProxyRecord(text: string): {
   const jsonText = text.slice(start + RECORD_START.length, end).trim();
   const reply = text.slice(0, start).trim();
   try {
-    return { reply: reply || text.trim(), record: JSON.parse(jsonText) as Record<string, unknown> };
+    return { reply: reply || text.trim(), record: JSON.parse(jsonText) as Record<string, Json> };
   } catch {
     return { reply: text.trim(), record: null };
   }
@@ -52,7 +52,9 @@ export const sendAgentMessage = createServerFn({ method: "POST" })
     const [{ data: profile }, { data: history, error: histErr }] = await Promise.all([
       supabase
         .from("profiles")
-        .select("full_name, proxy_record, gender, seeking_gender, date_of_birth, location")
+        .select(
+          "full_name, proxy_record, gender, seeking_gender, date_of_birth, location, updated_at",
+        )
         .eq("id", userId)
         .maybeSingle(),
       supabase
@@ -63,6 +65,16 @@ export const sendAgentMessage = createServerFn({ method: "POST" })
         .limit(60),
     ]);
     if (histErr) throw new Error(histErr.message);
+
+    // The legacy text agent must not replace a customer-confirmed Heimdall record.
+    const preferences = (
+      profile?.proxy_record as { preferences?: { items?: { source?: string }[] } } | null
+    )?.preferences;
+    if (preferences?.items?.some((item) => item.source === "customer_onboarding")) {
+      throw new Error(
+        "Use your screening profile to edit requirements and the dashboard to request your interview.",
+      );
+    }
 
     const firstName = (profile?.full_name ?? "").split(" ")[0] || "there";
     const proxyRecord = profile?.proxy_record ?? {};
@@ -133,7 +145,8 @@ export const sendAgentMessage = createServerFn({ method: "POST" })
       const { error: upErr } = await supabase
         .from("profiles")
         .update({ proxy_record: record })
-        .eq("id", userId);
+        .eq("id", userId)
+        .eq("updated_at", profile!.updated_at);
       if (upErr) console.error("proxy_record update failed:", upErr.message);
     }
 
